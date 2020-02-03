@@ -21,11 +21,13 @@ from sklearn.metrics import mean_squared_error, r2_score, recall_score, \
 from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV, ShuffleSplit
 from collections import defaultdict
 from cleaning import cleaning, cleaning_w_impute
+import warnings
+warnings.filterwarnings('ignore')
 style.use('seaborn')
 sns.set_style(style='darkgrid')
 #%%
-dc = pd.read_csv('dc-wikia-data.csv')
-marvel = pd.read_csv('marvel-wikia-data.csv')
+dc = pd.read_csv('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/data/dc-wikia-data-edited.csv')
+marvel = pd.read_csv('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/data/marvel-wikia-data-edited.csv')
 marvel = marvel.rename(columns={'Year': 'YEAR'})
 
 data = pd.concat([dc,marvel])
@@ -133,50 +135,61 @@ scores.sort_values(by='Mean Decrease Accuracy').plot(kind='barh')
 """
 #%%
 """
-gbc = GradientBoostingClassifier(n_estimators=500, learning_rate = 0.1,
-                                 max_depth=3, min_samples_split=2,
+gbc = GradientBoostingClassifier(n_estimators=500, learning_rate = 0.07,
+                                 max_depth=4, min_samples_split=2,
                                  min_samples_leaf = 1, 
                                  max_features=None, random_state=1)
 
-selector = RFECV(gbc, step=1, cv=5, verbose=5, n_jobs=-1)
+selector = RFECV(gbc, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
 selector = selector.fit(X_train, y_train)
 bad_features = list(data.drop(columns=['ALIGN']).columns[~selector.support_])
 """
 #%%
 bad_features_gbc = ['Identity Unknown',
+ 'Known to Authorities Identity',
  'Amber Eyes',
  'Black Eyeballs',
+ 'Compound Eyes',
  'Gold Eyes',
+ 'Grey Eyes',
+ 'Hazel Eyes',
  'Magenta Eyes',
+ 'Multiple Eyes',
  'No Eyes',
  'One Eye',
- 'Photocellular Eyes',
+ 'Orange Eyes',
+ 'Pink Eyes',
  'Purple Eyes',
+ 'Silver Eyes',
  'Variable Eyes',
+ 'Violet Eyes',
  'Yellow Eyeballs',
- 'Auburn Hair',
+ 'Blue Hair',
+ 'Bronze Hair',
  'Gold Hair',
- 'Light Brown Hair',
  'Magenta Hair',
+ 'Orange-brown Hair',
  'Pink Hair',
  'Platinum Blond Hair',
- 'Reddish Blond Hair',
- 'Reddish Brown Hair',
+ 'Purple Hair',
  'Silver Hair',
+ 'Strawberry Blond Hair',
+ 'Variable Hair',
  'Violet Hair',
- 'Agender Characters',
+ 'Yellow Hair',
  'Genderfluid Characters',
- 'Genderless Characters']
+ 'Genderless Characters',
+ 'Transgender Characters']
 #%%
-gbc = GradientBoostingClassifier(n_estimators=500, learning_rate = 0.1,
-                                 max_depth=3, min_samples_split=2,
+gbc = GradientBoostingClassifier(n_estimators=500, learning_rate = 0.07,
+                                 max_depth=4, min_samples_split=2,
                                  min_samples_leaf = 1, 
                                  max_features=None, random_state=1)
 
 data = data.drop(columns=bad_features_gbc)
 X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1, stratify = data['ALIGN'].values)
 
 gbc.fit(X_train,y_train)
 
@@ -185,7 +198,9 @@ conf.ax_.grid(False)
 conf.ax_.set_title('Gradient Boosting Confusion Matrix')
 
 fig, ax = plt.subplots()
-ax.bar(np.asarray(data.drop(columns=['ALIGN']).columns),gbc.feature_importances_)
-ax.set_xticklabels(data.drop(columns=['ALIGN']).columns,rotation=90)
+ax.bar(np.asarray(data.drop(columns=['ALIGN']).columns[np.argsort(gbc.feature_importances_)[::-1]]),
+       gbc.feature_importances_[np.argsort(gbc.feature_importances_)[::-1]])
+ax.set_xticklabels(data.drop(columns=['ALIGN']).columns[np.argsort(gbc.feature_importances_)[::-1]],
+                   rotation=90)
 ax.set_title('Gradient Boosting Feature Importance')
 plt.tight_layout()

@@ -14,6 +14,14 @@ def cleaning(data):
     data = data.reset_index().drop(columns=['index'])
     data['HAIR'][data['EYE'] == 'Auburn Hair'] = data['HAIR'][data['EYE'] == 'Auburn Hair'].fillna('Auburn Hair')
     data['EYE'][data['EYE'] == 'Auburn Hair'] = np.nan
+    data['HAIR'][data['HAIR']=='Light Brown Hair'] = 'Brown Hair'
+    data['HAIR'][data['HAIR']=='Reddish Brown Hair'] = 'Auburn Hair'
+    data['HAIR'][data['HAIR']=='Reddish Blond Hair'] = 'Strawberry Blond Hair'
+    data['HAIR'][data['HAIR']=='Bald'] = 'No Hair'
+    data['ID'] = data['ID'].fillna('No Dual Identity')
+    data['SEX'] = data['SEX'].fillna('Agender Characters')
+    data['HAIR'] = data['HAIR'].fillna('No Hair')
+    data['EYE'] = data['EYE'].fillna('Unknown Eyes')
     data = data.rename(columns={'GSM':'LGBT'})
     data['LGBT'] = data['LGBT'].map({np.nan:0})
     data['LGBT'] = data['LGBT'].map({np.nan:1, 0:0})
@@ -24,6 +32,11 @@ def cleaning(data):
     data = data[data['name'] != 'GenderTest']
     data['ALIVE'] = data['ALIVE'].map({'Deceased Characters':0, 'Living Characters':1})
     data = data.drop(columns=['page_id','name','urlslug','FIRST APPEARANCE'])
+    
+    data['YEAR'] = data['YEAR'].fillna(np.nanmedian(data['YEAR']))
+    data['APPEARANCES'] = data['APPEARANCES'].fillna(np.nanmedian(data['APPEARANCES']))
+    data['ALIVE'] = data['ALIVE'].fillna(stats.mode(data['ALIVE'])[0][0])
+
     
     data = data.dropna()
     data = data.join(pd.get_dummies(data['ID']))
@@ -35,7 +48,7 @@ def cleaning(data):
     data = data.join(pd.get_dummies(data['SEX']))
     data = data.drop(columns=['SEX'])
     #data = data.drop(columns=['Identity Unknown','Black Eyeballs','Platinum Blond Hair','Genderfluid Characters'])
-    data['ALIGN'] = data['ALIGN'].map({'Good Characters': 1, 'Bad Characters':0})
+    data['ALIGN'] = data['ALIGN'].map({'Good Characters': 0, 'Bad Characters':1})
     return data
 
 def cleaning_w_impute(data):
@@ -43,6 +56,8 @@ def cleaning_w_impute(data):
     data = data.reset_index().drop(columns=['index'])
     data['HAIR'][data['EYE'] == 'Auburn Hair'] = data['HAIR'][data['EYE'] == 'Auburn Hair'].fillna('Auburn Hair')
     data['EYE'][data['EYE'] == 'Auburn Hair'] = np.nan
+    data['HAIR'][data['HAIR']=='Light Brown Hair'] = 'Brown Hair'
+    data['HAIR'][data['HAIR']=='Bald'] = 'No Hair'
     data = data.rename(columns={'GSM':'LGBT'})
     data['LGBT'] = data['LGBT'].map({np.nan:0})
     data['LGBT'] = data['LGBT'].map({np.nan:1, 0:0})
@@ -54,8 +69,8 @@ def cleaning_w_impute(data):
     data['ALIVE'] = data['ALIVE'].map({'Deceased Characters':0, 'Living Characters':1})
     data = data.drop(columns=['page_id','name','urlslug','FIRST APPEARANCE'])
     
-    data['YEAR'] = data['YEAR'].fillna(np.mean(data['YEAR']))
-    data['APPEARANCES'] = data['APPEARANCES'].fillna(np.mean(data['APPEARANCES']))
+    data['YEAR'] = data['YEAR'].fillna(np.nanmedian(data['YEAR']))
+    data['APPEARANCES'] = data['APPEARANCES'].fillna(np.nanmedian(data['APPEARANCES']))
     data['ALIVE'] = data['ALIVE'].fillna(stats.mode(data['ALIVE'])[0][0])
     sex_probs = data['SEX'].value_counts()/data['SEX'].value_counts().sum()
     data['SEX'] = data['SEX'].fillna(np.random.choice(sex_probs.index,p=sex_probs.values))
