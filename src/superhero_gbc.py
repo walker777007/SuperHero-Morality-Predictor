@@ -11,15 +11,17 @@ import numpy as np
 import seaborn as sns
 import scipy.stats as stats
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression, RidgeCV, LassoCV
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from xgboost import XGBClassifier
 from sklearn.feature_selection import RFE, RFECV
-from sklearn.metrics import mean_squared_error, r2_score, recall_score, \
+from sklearn.metrics import mean_squared_error, r2_score, recall_score, accuracy_score,\
      precision_score, confusion_matrix, plot_confusion_matrix, roc_curve, plot_roc_curve
-from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV, ShuffleSplit
+from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV,\
+     RandomizedSearchCV, ShuffleSplit
 from collections import defaultdict
 from cleaning import cleaning
 import warnings
@@ -34,11 +36,9 @@ marvel = marvel.rename(columns={'Year': 'YEAR'})
 data = pd.concat([dc,marvel])
 data = cleaning(data)
 #%%
-"""
 X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-"""
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 """
 gbc = GradientBoostingClassifier()
@@ -75,25 +75,6 @@ gb_random = RandomizedSearchCV(estimator = gbc, param_distributions = random_gri
 gb_random.fit(X_train, y_train)
 
 print("best parameters:", gb_random.best_params_)
-"""
-#%%
-"""
-gbc = GradientBoostingClassifier(n_estimators=500, learning_rate = 0.1,
-                                 max_depth=3, min_samples_split=2,
-                                 min_samples_leaf = 1, 
-                                 max_features=None, random_state=1)
-
-gbc.fit(X_train,y_train)
-
-conf = plot_confusion_matrix(gbc,X_test,y_test,normalize='true',cmap='PuBu')
-conf.ax_.grid(False)
-conf.ax_.set_title('Gradient Boosting Confusion Matrix')
-
-fig, ax = plt.subplots()
-ax.bar(np.asarray(data.drop(columns=['ALIGN']).columns),gbc.feature_importances_)
-ax.set_xticklabels(data.drop(columns=['ALIGN']).columns,rotation=90)
-ax.set_title('Gradient Boosting Feature Importance')
-plt.tight_layout()
 """
 #%%
 """
@@ -172,19 +153,26 @@ bad_features_gbc = ['Identity Unknown',
  'Yellow Hair',
  'Genderfluid Characters',
  'Transgender Characters']
+
+data = data.drop(columns=bad_features_gbc)
+X = data.drop(columns=['ALIGN']).values
+y = data['ALIGN'].values
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 gbc = GradientBoostingClassifier(n_estimators=500, learning_rate = 0.07,
                                  max_depth=4, min_samples_split=2,
                                  min_samples_leaf = 1, 
                                  max_features=None, random_state=1)
 
-data = data.drop(columns=bad_features_gbc)
-X = data.drop(columns=['ALIGN']).values
-y = data['ALIGN'].values
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1, stratify = data['ALIGN'].values)
+cv_results = cross_validate(gbc, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 gbc.fit(X_train,y_train)
 
+gbc_accuracy = 0.6998218001715865
+gbc_recall = 0.7837504434576834
+gbc_precision = 0.7081536437901388
+#%%
+"""
 conf = plot_confusion_matrix(gbc,X_test,y_test,normalize='true',cmap='PuBu')
 conf.ax_.grid(False)
 conf.ax_.set_title('Gradient Boosting Confusion Matrix')
@@ -196,3 +184,4 @@ ax.set_xticklabels(data.drop(columns=['ALIGN']).columns[np.argsort(gbc.feature_i
                    rotation=90)
 ax.set_title('Gradient Boosting Feature Importance')
 plt.tight_layout()
+"""

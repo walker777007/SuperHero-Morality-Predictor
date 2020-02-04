@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 30 20:07:55 2020
+Created on Tue Feb  4 12:05:55 2020
 
 @author: walke
 """
@@ -40,24 +40,22 @@ X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
-dt = DecisionTreeClassifier(random_state=1)
+
+abc = AdaBoostClassifier(n_estimators=500, learning_rate = 0.07, random_state=1)
 """
-selector = RFECV(dt, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
+selector = RFECV(abc, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
 selector = selector.fit(X_train, y_train)
 bad_features = list(data.drop(columns=['ALIGN']).columns[~selector.support_])
 """
 #%%
-bad_features_dt = ['LGBT',
- 'Identity Unknown',
+bad_features_abc = ['Identity Unknown',
  'Known to Authorities Identity',
  'No Dual Identity',
  'Amber Eyes',
  'Black Eyeballs',
  'Black Eyes',
- 'Blue Eyes',
  'Compound Eyes',
  'Gold Eyes',
- 'Green Eyes',
  'Grey Eyes',
  'Hazel Eyes',
  'Magenta Eyes',
@@ -65,24 +63,21 @@ bad_features_dt = ['LGBT',
  'No Eyes',
  'One Eye',
  'Orange Eyes',
- 'Photocellular Eyes',
  'Pink Eyes',
  'Purple Eyes',
- 'Red Eyes',
  'Silver Eyes',
+ 'Unknown Eyes',
  'Variable Eyes',
  'Violet Eyes',
  'White Eyes',
  'Yellow Eyeballs',
- 'Yellow Eyes',
  'Auburn Hair',
- 'Blue Hair',
  'Bronze Hair',
+ 'Brown Hair',
  'Gold Hair',
  'Green Hair',
  'Grey Hair',
  'Magenta Hair',
- 'Orange Hair',
  'Orange-brown Hair',
  'Pink Hair',
  'Platinum Blond Hair',
@@ -99,31 +94,23 @@ bad_features_dt = ['LGBT',
  'Male Characters',
  'Transgender Characters']
 
-data = data.drop(columns=bad_features_dt)
+data = data.drop(columns=bad_features_abc)
 X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
-dt = DecisionTreeClassifier(random_state=1)
+abc = AdaBoostClassifier(n_estimators=500, learning_rate = 0.07, random_state=1)
 
-cv_results = cross_validate(dt, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+cv_results = cross_validate(abc, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
-dt.fit(X_train,y_train)
+abc.fit(X_train,y_train)
 
-dt_accuracy = 0.6333047053995363
-dt_recall = 0.6618730677915223
-dt_precision = 0.6737614307263422
+abc_accuracy = 0.6770527179777083
+abc_recall =  0.7908695474197585
+abc_precision = 0.6806630693420754
 #%%
 """
-conf = plot_confusion_matrix(dt,X_test,y_test,normalize='true',cmap='YlGn')
+conf = plot_confusion_matrix(xgb,X_test,y_test,normalize='true',cmap='GnBu')
 conf.ax_.grid(False)
-conf.ax_.set_title('Decision Tree Confusion Matrix')
-
-fig, ax = plt.subplots()
-ax.bar(np.asarray(data.drop(columns=['ALIGN']).columns[np.argsort(dt.feature_importances_)[::-1]]),
-       dt.feature_importances_[np.argsort(dt.feature_importances_)[::-1]])
-ax.set_xticklabels(data.drop(columns=['ALIGN']).columns[np.argsort(dt.feature_importances_)[::-1]],
-                   rotation=90)
-ax.set_title('Decision Tree Feature Importance')
-plt.tight_layout()
+conf.ax_.set_title('XGBoost Confusion Matrix')
 """
