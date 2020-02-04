@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jan 29 23:47:33 2020
+Created on Mon Feb  3 20:42:27 2020
 
 @author: walke
 """
@@ -16,6 +16,7 @@ from sklearn.linear_model import LogisticRegression, RidgeCV, LassoCV
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from xgboost import XGBClassifier
 from sklearn.feature_selection import RFE, RFECV
 from sklearn.metrics import mean_squared_error, r2_score, recall_score, \
      precision_score, confusion_matrix, plot_confusion_matrix, roc_curve, plot_roc_curve
@@ -35,24 +36,57 @@ data = pd.concat([dc,marvel])
 data = cleaning(data)
 #%%
 """
-log = LogisticRegression(random_state=1, max_iter=1000, C=0.9)
+xgb = XGBClassifier(n_estimators=500, learning_rate = 0.07, max_depth=4,
+                    min_child_weight=2,
+                    random_state=1, n_jobs=-1)
 
-selector = RFECV(log, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
+selector = RFECV(xgb, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
 selector = selector.fit(X_train, y_train)
 bad_features = list(data.drop(columns=['ALIGN']).columns[~selector.support_])
 """
 #%%
-bad_features_log = ['APPEARANCES', 'YEAR', 'Black Eyes', 'Yellow Eyeballs', 'Orange-brown Hair']
+bad_features_xgb = ['Identity Unknown',
+ 'Known to Authorities Identity',
+ 'Amber Eyes',
+ 'Black Eyeballs',
+ 'Compound Eyes',
+ 'Gold Eyes',
+ 'Magenta Eyes',
+ 'Multiple Eyes',
+ 'No Eyes',
+ 'One Eye',
+ 'Pink Eyes',
+ 'Purple Eyes',
+ 'Silver Eyes',
+ 'Violet Eyes',
+ 'Yellow Eyeballs',
+ 'Auburn Hair',
+ 'Bronze Hair',
+ 'Gold Hair',
+ 'Magenta Hair',
+ 'Orange-brown Hair',
+ 'Pink Hair',
+ 'Platinum Blond Hair',
+ 'Purple Hair',
+ 'Silver Hair',
+ 'Strawberry Blond Hair',
+ 'Variable Hair',
+ 'Violet Hair',
+ 'Yellow Hair',
+ 'Genderfluid Characters',
+ 'Transgender Characters']
 #%%
-log = LogisticRegression(random_state=1, max_iter=1000, C=0.9)
+xgb = XGBClassifier(n_estimators=500, learning_rate = 0.07, max_depth=4,
+                    min_child_weight=2,
+                    random_state=1, n_jobs=-1)
 
-data = data.drop(columns=bad_features_log)
+#data = data.drop(columns=bad_features_xgb)
 X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 
-log.fit(X_train,y_train)
+xgb.fit(X_train,y_train)
 
-conf = plot_confusion_matrix(log,X_test,y_test,normalize='true',cmap='YlOrBr')
+conf = plot_confusion_matrix(xgb,X_test,y_test,normalize='true',cmap='GnBu')
 conf.ax_.grid(False)
-conf.ax_.set_title('Logistic Regression Confusion Matrix')
+conf.ax_.set_title('XGBoost Confusion Matrix')

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jan 29 23:47:33 2020
+Created on Mon Feb  3 19:34:52 2020
 
 @author: walke
 """
@@ -35,24 +35,21 @@ data = pd.concat([dc,marvel])
 data = cleaning(data)
 #%%
 """
-log = LogisticRegression(random_state=1, max_iter=1000, C=0.9)
+knn = KNeighborsClassifier(n_neighbors=25, p=1)
 
-selector = RFECV(log, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
+selector = RFECV(knn, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
 selector = selector.fit(X_train, y_train)
 bad_features = list(data.drop(columns=['ALIGN']).columns[~selector.support_])
 """
 #%%
-bad_features_log = ['APPEARANCES', 'YEAR', 'Black Eyes', 'Yellow Eyeballs', 'Orange-brown Hair']
-#%%
-log = LogisticRegression(random_state=1, max_iter=1000, C=0.9)
+knn = KNeighborsClassifier(n_neighbors=25, p=1)
 
-data = data.drop(columns=bad_features_log)
 X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 
-log.fit(X_train,y_train)
+knn.fit(X_train,y_train)
 
-conf = plot_confusion_matrix(log,X_test,y_test,normalize='true',cmap='YlOrBr')
+conf = plot_confusion_matrix(knn,X_test,y_test,normalize='true',cmap='OrRd')
 conf.ax_.grid(False)
-conf.ax_.set_title('Logistic Regression Confusion Matrix')
+conf.ax_.set_title('K Nearest Neighbors Confusion Matrix')

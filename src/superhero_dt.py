@@ -15,6 +15,7 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression, RidgeCV, LassoCV
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.feature_selection import RFE, RFECV
 from sklearn.metrics import mean_squared_error, r2_score, recall_score, \
      precision_score, confusion_matrix, plot_confusion_matrix, roc_curve, plot_roc_curve
