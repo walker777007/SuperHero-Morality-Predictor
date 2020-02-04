@@ -2,7 +2,7 @@
 <img src="images/Sentinel.jpg" width="700" height="475">
 </p>
 
-# The Sentinel (Super Hero Morality Predictor)?
+# The Sentinel (Super Hero Morality Predictor)
 **Predicting whether comic book characters are good or evil**
 <br>Walker Stevens
 \

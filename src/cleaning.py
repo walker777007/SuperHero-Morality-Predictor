@@ -17,6 +17,7 @@ def cleaning(data):
     data['HAIR'][data['HAIR']=='Light Brown Hair'] = 'Brown Hair'
     data['HAIR'][data['HAIR']=='Reddish Brown Hair'] = 'Auburn Hair'
     data['HAIR'][data['HAIR']=='Reddish Blond Hair'] = 'Strawberry Blond Hair'
+    data['SEX'][data['SEX']=='Genderless Characters'] = 'Agender Characters'
     data['HAIR'][data['HAIR']=='Bald'] = 'No Hair'
     data['ID'] = data['ID'].fillna('No Dual Identity')
     data['SEX'] = data['SEX'].fillna('Agender Characters')
@@ -50,6 +51,12 @@ def cleaning(data):
     #data = data.drop(columns=['Identity Unknown','Black Eyeballs','Platinum Blond Hair','Genderfluid Characters'])
     data['ALIGN'] = data['ALIGN'].map({'Good Characters': 0, 'Bad Characters':1})
     return data
+
+
+
+
+
+"""
 
 def cleaning_w_impute(data):
     np.random.seed(1)
@@ -92,3 +99,7 @@ def cleaning_w_impute(data):
     data = data.drop(columns=['Identity Unknown','Compound Eyes','Platinum Blond Hair','Transgender Characters'])
     data['ALIGN'] = data['ALIGN'].map({'Good Characters': 1, 'Bad Characters':0})
     return data
+    
+    
+    
+"""

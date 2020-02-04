@@ -20,7 +20,7 @@ from sklearn.metrics import mean_squared_error, r2_score, recall_score, \
      precision_score, confusion_matrix, plot_confusion_matrix, roc_curve, plot_roc_curve
 from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV, ShuffleSplit
 from collections import defaultdict
-from cleaning import cleaning, cleaning_w_impute
+from cleaning import cleaning
 import warnings
 warnings.filterwarnings('ignore')
 style.use('seaborn')
@@ -32,14 +32,6 @@ marvel = marvel.rename(columns={'Year': 'YEAR'})
 
 data = pd.concat([dc,marvel])
 data = cleaning(data)
-
-"""data = data.drop(columns=['Brown Hair','Hazel Eyes','Gold Hair','Purple Hair',
-                          'White Hair','Blue Hair','Magenta Hair','Purple Eyes',
-                          'Strawberry Blond Hair','Silver Hair','One Eye',
-                          'Black Eyes','Genderless Characters','Pink Hair',
-                          'Magenta Eyes','Photocellular Eyes','Yellow Eyeballs',
-                          'Amber Eyes','Violet Hair','Public Identity','No Eyes'])
-"""
 #%%
 """
 X = data.drop(columns=['ALIGN']).values
@@ -178,7 +170,6 @@ bad_features_gbc = ['Identity Unknown',
  'Violet Hair',
  'Yellow Hair',
  'Genderfluid Characters',
- 'Genderless Characters',
  'Transgender Characters']
 #%%
 gbc = GradientBoostingClassifier(n_estimators=500, learning_rate = 0.07,
