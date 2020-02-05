@@ -87,16 +87,16 @@ y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 xgb = XGBClassifier(n_estimators=500, learning_rate = 0.07, max_depth=4,
-                    min_child_weight=2,
+                    min_child_weight=1,
                     random_state=1, n_jobs=-1)
 
-cv_results = cross_validate(xgb, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+#cv_results = cross_validate(xgb, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 xgb.fit(X_train,y_train)
 
-gbc_accuracy = 0.6981894643767943
-gbc_recall =  0.7847264402141072
-gbc_precision = 0.705907188213162
+xgb_accuracy = 0.6993551467317499
+xgb_recall =  0.7866808703076329
+xgb_precision = 0.7065359007180642
 #%%
 """
 conf = plot_confusion_matrix(xgb,X_test,y_test,normalize='true',cmap='GnBu')

@@ -45,9 +45,9 @@ X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
-knn = KNeighborsClassifier(n_neighbors=25, p=1)
+knn = KNeighborsClassifier(n_neighbors=25, p=1, n_jobs=-1)
 
-cv_results = cross_validate(knn, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+#cv_results = cross_validate(knn, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 knn.fit(X_train,y_train)
 

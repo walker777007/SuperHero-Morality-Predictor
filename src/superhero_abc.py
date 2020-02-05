@@ -101,7 +101,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 abc = AdaBoostClassifier(n_estimators=500, learning_rate = 0.07, random_state=1)
 
-cv_results = cross_validate(abc, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+#cv_results = cross_validate(abc, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 abc.fit(X_train,y_train)
 

@@ -40,7 +40,7 @@ X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
-log = LogisticRegression(random_state=1, max_iter=1000, C=0.9)
+log = LogisticRegression(random_state=1, max_iter=1000, C=0.9, n_jobs=-1)
 """
 selector = RFECV(log, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
 selector = selector.fit(X_train, y_train)
@@ -54,9 +54,9 @@ X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
-log = LogisticRegression(random_state=1, max_iter=1000, C=0.9)
+log = LogisticRegression(random_state=1, max_iter=1000, C=0.9, n_jobs=-1)
 
-cv_results = cross_validate(log, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+#cv_results = cross_validate(log, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 log.fit(X_train,y_train)
 

@@ -164,7 +164,7 @@ gbc = GradientBoostingClassifier(n_estimators=500, learning_rate = 0.07,
                                  min_samples_leaf = 1, 
                                  max_features=None, random_state=1)
 
-cv_results = cross_validate(gbc, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+#cv_results = cross_validate(gbc, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 gbc.fit(X_train,y_train)
 

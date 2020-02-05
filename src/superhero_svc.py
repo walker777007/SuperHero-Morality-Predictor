@@ -45,9 +45,9 @@ X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
-svm = SVC(random_state=1, gamma='auto')
+svm = SVC(random_state=1, gamma='auto', probability=True)
 
-cv_results = cross_validate(svm, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+#cv_results = cross_validate(svm, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 svm.fit(X_train,y_train)
 

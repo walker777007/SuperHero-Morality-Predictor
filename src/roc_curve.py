@@ -28,21 +28,21 @@ from collections import defaultdict
 from cleaning import cleaning
 import warnings
 warnings.filterwarnings('ignore')
+colors = sns.color_palette()
 style.use('seaborn')
 sns.set_style(style='darkgrid')
 #%%
-def plot_roc(X, y, clf_class, plot_name, **kwargs):
+def plot_roc(X, y, clf, color, **kwargs):
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
     n_splits=5
-    kf = KFold(n_splits=n_splits, shuffle=True)
+    kf = KFold(n_splits=n_splits, shuffle=True, random_state=1)
     y_prob = np.zeros((len(y),2))
     mean_tpr = 0.0
     mean_fpr = np.linspace(0, 1, 100)
     for i, (train_index, test_index) in enumerate(kf.split(X)):
         X_train, X_test = X[train_index], X[test_index]
         y_train = y[train_index]
-        clf = clf_class(**kwargs)
         clf.fit(X_train,y_train)
         # Predict probabilities, not classes
         y_prob[test_index] = clf.predict_proba(X_test)
@@ -50,50 +50,52 @@ def plot_roc(X, y, clf_class, plot_name, **kwargs):
         mean_tpr += interp(mean_fpr, fpr, tpr)
         mean_tpr[0] = 0.0
         roc_auc = auc(fpr, tpr)
-        plt.plot(fpr, tpr, lw=1, label='ROC fold %d (area = %0.2f)' % (i, roc_auc))
+        #plt.plot(fpr, tpr, lw=1, label='ROC fold %d (area = %0.2f)' % (i, roc_auc))
     mean_tpr /= n_splits
     mean_tpr[-1] = 1.0
     mean_auc = auc(mean_fpr, mean_tpr)
-    plt.plot(mean_fpr, mean_tpr, 'k--',label='Mean ROC (area = %0.2f)' % mean_auc, lw=2)
+    plt.plot(mean_fpr, mean_tpr, color=color, label=type(clf).__name__ +' (AUC = %0.2f)' % mean_auc, lw=2)
     
-    plt.plot([0, 1], [0, 1], '--', color=(0.6, 0.6, 0.6), label='Random')
     plt.xlim([-0.05, 1.05])
     plt.ylim([-0.05, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver operating characteristic')
     plt.legend(loc="lower right")
-    #plt.savefig('17_' + plot_name + '.png')
-    #plt.close()
 #%%
-from superhero_gbc import gbc, X_test, y_test
-X_test_gbc = X_test
-y_test_gbc = y_test
-from superhero_rfc import rfc, X_test, y_test
-X_test_rfc = X_test
-y_test_rfc = y_test
-from superhero_log import log, X_test, y_test
-X_test_log = X_test
-y_test_log = y_test
-from superhero_dt import dt, X_test, y_test
-X_test_dt = X_test
-y_test_dt = y_test
-from superhero_svc import svm, X_test, y_test
-X_test_svm = X_test
-y_test_svm = y_test
-from superhero_knn import knn, X_test, y_test
-X_test_knn = X_test
-y_test_knn = y_test
+from superhero_gbc import gbc, X_train, y_train
+X_train_gbc = X_train
+y_train_gbc = y_train
+from superhero_rfc import rfc, X_train, y_train
+X_train_rfc = X_train
+y_train_rfc = y_train
+from superhero_log import log, X_train, y_train
+X_train_log = X_train
+y_train_log = y_train
+from superhero_dt import dt, X_train, y_train
+X_train_dt = X_train
+y_train_dt = y_train
+from superhero_svc import svm, X_train, y_train
+X_train_svm = X_train
+y_train_svm = y_train
+from superhero_knn import knn, X_train, y_train
+X_train_knn = X_train
+y_train_knn = y_train
+from superhero_abc import abc, X_train, y_train
+X_train_abc = X_train
+y_train_abc = y_train
+from superhero_xgb import xgb, X_train, y_train
+X_train_xgb = X_train
+y_train_xgb = y_train
 #%%
-fig, ax = plt.subplots()
-plot_roc_curve(gbc,X_test_gbc,y_test_gbc, ax=ax)
-plot_roc_curve(rfc,X_test_rfc,y_test_rfc, ax=ax)
-plot_roc_curve(log,X_test_log,y_test_log, ax=ax)
-plot_roc_curve(dt,X_test_dt,y_test_dt, ax=ax)
-plot_roc_curve(svm,X_test_svm,y_test_svm, ax=ax)
-plot_roc_curve(knn,X_test_knn,y_test_knn, ax=ax)
-plt.plot(np.linspace(0,1,11),np.linspace(0,1,11),color='k')
+plot_roc(X_train_xgb,y_train_xgb,xgb, colors[0])
+plot_roc(X_train_gbc,y_train_gbc,gbc, colors[1])
+plot_roc(X_train_rfc,y_train_rfc,rfc, colors[2])
+plot_roc(X_train_abc,y_train_abc,abc, colors[3])
+plot_roc(X_train_knn,y_train_knn,knn, colors[4])
+plot_roc(X_train_svm,y_train_svm,svm, colors[5])
+plot_roc(X_train_log,y_train_log,log, colors[6])
+plot_roc(X_train_dt,y_train_dt,dt, colors[7])
+plt.plot(np.linspace(0,1,11),np.linspace(0,1,11),color='k',linestyle='--')
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('ROC Curve')
+plt.title('5 CV Mean ROC Curves')
+plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/ROC.png', dpi=640)
 

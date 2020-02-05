@@ -106,7 +106,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 dt = DecisionTreeClassifier(random_state=1)
 
-cv_results = cross_validate(dt, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+#cv_results = cross_validate(dt, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 dt.fit(X_train,y_train)
 

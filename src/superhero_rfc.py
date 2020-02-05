@@ -77,7 +77,7 @@ print("best parameters:", rf_random.best_params_)
 #%%
 rfc = RandomForestClassifier(n_estimators=300,min_samples_split=6,
                              min_samples_leaf=1,max_features=None,
-                             max_depth=10,bootstrap=True,random_state=1)
+                             max_depth=10,bootstrap=True,random_state=1,n_jobs=-1)
 """
 selector = RFECV(rfc, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
 selector = selector.fit(X_train, y_train)
@@ -112,15 +112,15 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 rfc = RandomForestClassifier(n_estimators=300,min_samples_split=6,
                              min_samples_leaf=1,max_features=None,
-                             max_depth=10,bootstrap=True,random_state=1)
+                             max_depth=10,bootstrap=True,random_state=1,n_jobs=-1)
 
-cv_results = cross_validate(rfc, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+#cv_results = cross_validate(rfc, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
 rfc.fit(X_train,y_train)
 
-dt_accuracy = 0.6923614753774101
-dt_recall = 0.7773279091798665
-dt_precision = 0.7020127020067484
+rfc_accuracy = 0.6923614753774101
+rfc_recall = 0.7773279091798665
+rfc_precision = 0.7020127020067484
 #%%
 """
 conf = plot_confusion_matrix(rfc,X_test,y_test,normalize='true',cmap='Greens')
