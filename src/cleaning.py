@@ -32,7 +32,8 @@ def cleaning(data):
     data = data[pd.notnull(data['ALIGN'])]
     data = data[data['name'] != 'GenderTest']
     data['ALIVE'] = data['ALIVE'].map({'Deceased Characters':0, 'Living Characters':1})
-    data = data.drop(columns=['page_id','name','urlslug','FIRST APPEARANCE'])
+    data.set_index('name', inplace = True)
+    data = data.drop(columns=['page_id','urlslug','FIRST APPEARANCE'])
     
     data['YEAR'] = data['YEAR'].fillna(np.nanmedian(data['YEAR']))
     data['APPEARANCES'] = data['APPEARANCES'].fillna(np.nanmedian(data['APPEARANCES']))

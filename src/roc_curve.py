@@ -97,5 +97,6 @@ plt.plot(np.linspace(0,1,11),np.linspace(0,1,11),color='k',linestyle='--')
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('5 CV Mean ROC Curves')
-plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/ROC.png', dpi=640)
-
+plt.tight_layout()
+#plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/ROC.png', dpi=640)
+#plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/ROC_slides.png', dpi=640)

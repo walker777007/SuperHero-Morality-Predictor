@@ -22,6 +22,7 @@ from sklearn.metrics import mean_squared_error, r2_score, recall_score, accuracy
      precision_score, confusion_matrix, plot_confusion_matrix, roc_curve, plot_roc_curve
 from sklearn.model_selection import train_test_split, cross_validate, GridSearchCV,\
      RandomizedSearchCV, ShuffleSplit
+from sklearn.inspection import permutation_importance
 from collections import defaultdict
 from cleaning import cleaning
 import warnings
@@ -42,7 +43,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 
 xgb = XGBClassifier(n_estimators=500, learning_rate = 0.07, max_depth=4,
-                    min_child_weight=2,
+                    min_child_weight=1,
                     random_state=1, n_jobs=-1)
 """
 selector = RFECV(xgb, step=1, cv=5, scoring='accuracy', verbose=5, n_jobs=-1)
@@ -88,9 +89,11 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 xgb = XGBClassifier(n_estimators=500, learning_rate = 0.07, max_depth=4,
                     min_child_weight=1,
-                    random_state=1, n_jobs=-1)
+                    random_state=1, n_jobs=-1,)
 
 #cv_results = cross_validate(xgb, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
+
+#print(np.mean(cv_results['test_score']))
 
 xgb.fit(X_train,y_train)
 
@@ -99,7 +102,19 @@ xgb_recall =  0.7866808703076329
 xgb_precision = 0.7065359007180642
 #%%
 """
-conf = plot_confusion_matrix(xgb,X_test,y_test,normalize='true',cmap='GnBu')
+conf = plot_confusion_matrix(xgb,X_test,y_test,normalize='true',cmap='PuBu',display_labels=np.array(['Good','Bad']))
 conf.ax_.grid(False)
 conf.ax_.set_title('XGBoost Confusion Matrix')
+plt.tight_layout()
+plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/XGBoost_Confusion_Matrix.png', dpi=640)
+
+fig, ax = plt.subplots()
+ax.bar(np.asarray(data.drop(columns=['ALIGN']).columns[np.argsort(xgb.feature_importances_)[::-1]]),
+       xgb.feature_importances_[np.argsort(xgb.feature_importances_)[::-1]])
+ax.set_xticklabels(data.drop(columns=['ALIGN']).columns[np.argsort(xgb.feature_importances_)[::-1]],
+                   rotation=90)
+ax.set_title('XGBoost Feature Importance')
+ax.set_ylabel('Percentage')
+plt.tight_layout()
+plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/XGBoost_Feature_Importances.png', dpi=640)
 """
