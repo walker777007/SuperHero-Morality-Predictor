@@ -98,7 +98,8 @@ Using the training data, the feature importances (calculated by using the gain) 
 <p align="center">
 <img src="plots/XGBoost_Feature_Importances.png" width="800" height="381">
 </p>
-As expected, certain features like whether the character is female or has no hair, or red eyes were important in the classification.  On the test data, our model had an accuracy of **71.8%**, which was actually a bit better than our training accuracy of **70.0%**. The confusion matrix on the test data shows that it has a higher recall than negative predicted value, which means it is predicting evil characters better than good characters.  Unfortunately this means a lot of innocent good characters will be killed, I guess our sentinel can't entirely shrug off its intrinsic programming.
+As expected, certain features like whether the character is female or has no hair, or red eyes were important in the classification.  On the test data, our model had an accuracy of __71.8%__, which was actually a bit better than our training accuracy of __70.0%__. The confusion matrix on the test data shows that it has a higher recall than negative predicted value, which means it is predicting evil characters better than good characters.  Unfortunately this means a lot of innocent good characters will be killed, I guess our sentinel can't entirely shrug off its intrinsic programming.
 <p align="center">
 <img src="plots/XGBoost_Confusion_Matrix.png" width="800" height="550">
 </p>
+When we consider neutral characters as well as good and bad characters, our model performs much worse.  I guess our sentinel has a very black and white sense of morality.
