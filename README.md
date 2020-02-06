@@ -23,7 +23,7 @@
 
 ## Motivation
 
-In the Marvel comics, there are robots called [Sentinels](https://marvel.fandom.com/wiki/Sentinels), who hunt down [Mutants](https://marvel.fandom.com/wiki/Mutants)(super-humans).  My idea is "What if we could create a model that could predict whether a comic book character was good or evil based on all the known information about them?"  Essentially, can we create a new type of Sentinel that has a moral compass when it hunts down superheros/villains?  Giving robots the ability to decide who is good or evil can't go wrong, right?
+In the Marvel comics, there are robots called [Sentinels](https://marvel.fandom.com/wiki/Sentinels), who hunt down [Mutants](https://marvel.fandom.com/wiki/Mutants) (super-humans).  My idea is "What if we could create a model that could predict whether a comic book character was good or evil based on all the known information about them?"  Essentially, can we create a new type of Sentinel that has a moral compass when it hunts down superheros/villains?  Giving robots the ability to decide who is good or evil can't go wrong, right?
 
 ## Data exploration
 
@@ -67,3 +67,27 @@ In terms of physical characteristics, there is also a morality imbalance.  Chara
 <img src="plots/Eye_Color_Morality.png" width="800" height="381">
 <img src="plots/Hair_Color_Morality.png" width="800" height="381">
 </p>
+
+## Machine Learning Modeling
+
+To start, I chose a host of supervised learning models to classify the data:
+* [Decision Tree](https://en.wikipedia.org/wiki/Decision_tree)
+* [Logistic Regression](https://en.wikipedia.org/wiki/Logistic_regression)
+* [K Nearest Neighbors](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm)
+* [Support Vector Machine](https://en.wikipedia.org/wiki/Support-vector_machine)
+* [Random Forest](https://en.wikipedia.org/wiki/Random_forest)
+* [AdaBoost](https://en.wikipedia.org/wiki/AdaBoost)
+* [Gradient Boosting](https://en.wikipedia.org/wiki/Gradient_boosting)
+* [XGBoost](https://en.wikipedia.org/wiki/XGBoost)
+
+### Scoring Comparisons
+
+For my scores, I decided to compare Accuracy, Precision and Recall.  Using the means of a 5 Fold Cross Validation, I got the scores below.
+<p align="center">
+<img src="plots/Model_Scores.png" width="800" height="381">
+</p>
+As well, in the ROC Curve, we can see which models have the best diagnostic abilities.
+<p align="center">
+<img src="plots/ROC.png" width="800" height="550">
+</p>
+XGBoost and Gradient Boost are the 2 best performing models, as they have the best accuracy and precison and only a marginally smaller recall than AdaBoost and KNN.  Choosing between the two was a tossup considering how similar their results were, but I went with XGBoost since it was ever so higher on the ROC Curve.
