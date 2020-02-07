@@ -94,6 +94,10 @@ XGBoost and Gradient Boost are the 2 best performing models, as they have the be
 
 ### Best Model
 
+After tuning my final model, the hyperparameters were:
+n_estimaors (Number of gradient boosted trees) = 500
+learning_rate (Rate to shrink the contribution of each tree) = 0.07
+max_depth (Maximum tree depth for base learners) = 4
 Using the training data, the feature importances (calculated by using the gain) of the XGBoost model were:
 <p align="center">
 <img src="plots/XGBoost_Feature_Importances.png" width="800" height="381">
@@ -104,5 +108,5 @@ As expected, certain features like whether the character is female or has no hai
 </p>
 When we consider neutral characters as well as good and bad characters, our model performs much worse.  I guess our sentinel has a very black and white sense of morality.
 <p align="center">
-<img src="plots/XGBoost_Confusion_Matrix.png" width="800" height="550">
+<img src="plots/XGBoost_Confusion_Matrix_Neutral.png" width="800" height="550">
 </p>

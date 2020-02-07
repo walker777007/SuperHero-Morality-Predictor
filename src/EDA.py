@@ -7,6 +7,7 @@ Created on Mon Feb  3 12:37:27 2020
 
 import matplotlib.style as style
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 import numpy as np
 import seaborn as sns
 import scipy.stats as stats
@@ -49,13 +50,16 @@ bad_female_pct = 100*bad_females/(bad_females+good_females)
 good_female_pct = 100*good_females/(bad_females+good_females)
 
 fig, ax = plt.subplots()
-ax.bar([0, 1], [bad_male_pct,bad_female_pct], color='red')
-ax.bar([0, 1], [good_male_pct,good_female_pct], bottom=[bad_male_pct,bad_female_pct], color='blue')
+ax.bar([0, 1], [bad_male_pct,bad_female_pct], color='red', label='Bad')
+ax.bar([0, 1], [good_male_pct,good_female_pct], bottom=[bad_male_pct,bad_female_pct], color='blue', label='Good')
 ax.set_title('Morality by Sex')
 ax.set_xticks([0,1])
 ax.set_xticklabels(['Male','Female'])
 ax.set_xlabel('Sex')
 ax.set_ylabel('Percentage')
+
+legend_elements = [Patch(facecolor='r', label='Bad'), Patch(facecolor='b', label='Good')]
+ax.legend(handles=legend_elements, loc=9)
 plt.tight_layout()
 plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/Morality_by_Sex.png', dpi=640)
 
@@ -92,6 +96,8 @@ for bar in bars:
 ax.set_title('Eye Color Morality')
 ax.set_xlabel('Eye Color')
 ax.set_ylabel('Percentage')
+legend_elements = [Patch(facecolor='r', label='Bad'), Patch(facecolor='b', label='Good')]
+ax.legend(handles=legend_elements)
 plt.tight_layout()
 plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/Eye_Color_Morality.png', dpi=640)
 #%%
@@ -119,6 +125,8 @@ for bar in bars:
 ax.set_title('Hair Color Morality')
 ax.set_xlabel('Hair Color')
 ax.set_ylabel('Percentage')
+legend_elements = [Patch(facecolor='r', label='Bad'), Patch(facecolor='b', label='Good')]
+ax.legend(handles=legend_elements)
 plt.tight_layout()
 plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/Hair_Color_Morality.png', dpi=640)
 #%%
@@ -133,9 +141,11 @@ ax.fill_between(good_x, good_appearances[np.argsort(good_appearances)[::-1]],
                  np.zeros(good_x.shape[0]),color='blue')
 ax.fill_between(bad_x, bad_appearances[np.argsort(bad_appearances)[::-1]],
                  np.zeros(bad_x.shape[0]),color='red')
-ax.set_xlim(-50,5000)
+ax.set_xlim(-5,250)
 ax.set_title('Appearances by Morality')
 ax.set_xlabel('Top 250 Characters')
 ax.set_ylabel('Appearances')
+legend_elements = [Patch(facecolor='r', label='Bad'), Patch(facecolor='b', label='Good')]
+ax.legend(handles=legend_elements)
 plt.tight_layout()
 plt.savefig('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/plots/Appearances_by_Morality.png', dpi=640)
