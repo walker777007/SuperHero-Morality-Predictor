@@ -35,6 +35,7 @@ Where I got the data:
 
 In an [article Fivethirtyeight wrote in 2014](https://fivethirtyeight.com/features/women-in-comic-books/), they scraped both these wikis and compiled them into two separate csv files which they now host on their [Github](https://github.com/fivethirtyeight/data/tree/master/comic-characters).
 
+There are 23272 Characters in total.
 Features that they scraped about each character:
 * **Alignment**: Whether the character is Good, Bad or Neutral
 * **ID**: Whether they have a public, secret identity, etc.
@@ -46,7 +47,7 @@ Features that they scraped about each character:
 * **Appearances**: The number of appearances the character has had in comics
 * **Year**: The year the character was introduced
 
-Once all the data CSV files were collected, I used pandas in order to group them into dataframes, and proceeded to do all my calculations and tests after.  I categorized bad characters as 1 and good characters as 0, so predicting a bad character correctly would be considered a true positive.
+Once all the data CSV files were collected, I used pandas in order to group them into dataframes, and proceeded to do all my calculations and tests after.  Only cosidering good or bad alignment leaves me with 17159 characters in total.  I then categorized bad characters as 1 and good characters as 0, so predicting a bad character correctly would be considered a true positive.
 
 ### Moral inequality
 
@@ -95,14 +96,14 @@ XGBoost and Gradient Boost are the 2 best performing models, as they have the be
 ### Best Model
 
 After tuning my final model, the hyperparameters were:
-n_estimaors (Number of gradient boosted trees) = 500
+n_estimators (Number of gradient boosted trees) = 500
 learning_rate (Rate to shrink the contribution of each tree) = 0.07
 max_depth (Maximum tree depth for base learners) = 4
 Using the training data, the feature importances (calculated by using the gain) of the XGBoost model were:
 <p align="center">
 <img src="plots/XGBoost_Feature_Importances.png" width="800" height="381">
 </p>
-As expected, certain features like whether the character is female or has no hair, or red eyes were important in the classification.  On the test data, our model had an accuracy of <strong>71.8%</strong>, which was actually a bit better than our training accuracy of <strong>70.0%</strong>. The confusion matrix on the test data shows that it has a higher recall than negative predicted value, which means it is predicting evil characters better than good characters.  Unfortunately this means a lot of innocent good characters will be killed, I guess our sentinel can't entirely shrug off its intrinsic programming.
+As expected, certain features like whether the character is female or has no hair, or red eyes were important in the classification.  On the test data, our model had an accuracy of <strong>71.8%</strong>, which was actually a bit better than our training accuracy of <strong>70.0%</strong>. The confusion matrix on the test data shows that it has a higher recall than true negative rate, which means it is predicting evil characters better than good characters.  Unfortunately this means a lot of innocent good characters will be killed, I guess our sentinel can't entirely shrug off its intrinsic programming.
 <p align="center">
 <img src="plots/XGBoost_Confusion_Matrix.png" width="800" height="550">
 </p>
