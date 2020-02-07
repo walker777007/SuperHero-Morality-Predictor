@@ -110,3 +110,8 @@ When we consider neutral characters as well as good and bad characters, our mode
 <p align="center">
 <img src="plots/XGBoost_Confusion_Matrix_Neutral.png" width="800" height="550">
 </p>
+Another interesting point is that the model predicted with a probability of <strong>86.5%</strong> that Mk II Sentinels (the character I based this project off of) were evil.  It seems like we have achieved self-awareness!
+
+## Conclusion
+
+Although 71.8% doesn't seem all too high, we have to consider that a lot of comic book characters don't follow the stereotypes of their characteristics. Some bad characters have a lot of appearances, and have blue eyes and blond hair.  Some good characters have red eyes, are bald, and only show up in a few comics.  However, is this good enough to send off our sentinel on its hunt?  I guess it depends on how much the government contract is worth.  
