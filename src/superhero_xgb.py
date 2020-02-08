@@ -24,18 +24,23 @@ from sklearn.model_selection import train_test_split, cross_validate, GridSearch
      RandomizedSearchCV, ShuffleSplit
 from sklearn.inspection import permutation_importance
 from collections import defaultdict
-from cleaning import cleaning
+from cleaning import cleaning, new_cleaning
 import warnings
 warnings.filterwarnings('ignore')
 style.use('seaborn')
 sns.set_style(style='darkgrid')
 #%%
-dc = pd.read_csv('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/data/dc-wikia-data-edited.csv')
-marvel = pd.read_csv('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/data/marvel-wikia-data-edited.csv')
+#dc = pd.read_csv('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/data/dc-wikia-data-edited.csv')
+#marvel = pd.read_csv('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/data/marvel-wikia-data-edited.csv')
+#marvel = marvel.rename(columns={'Year': 'YEAR'})
+
+dc = pd.read_csv('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/data/dc.csv')
+marvel = pd.read_csv('C:/Users/walke/Documents/galvanize/capstones/SuperHero-Morality-Predictor/data/marvel.csv')
 marvel = marvel.rename(columns={'Year': 'YEAR'})
 
 data = pd.concat([dc,marvel])
-data = cleaning(data)
+#data = cleaning(data)
+data = new_cleaning(data)
 #%%
 X = data.drop(columns=['ALIGN']).values
 y = data['ALIGN'].values
@@ -89,7 +94,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
 #%%
 xgb = XGBClassifier(n_estimators=500, learning_rate = 0.07, max_depth=4,
                     min_child_weight=1,
-                    random_state=1, n_jobs=-1,)
+                    random_state=1, n_jobs=-1)
 
 #cv_results = cross_validate(xgb, X_train, y_train, cv=5, scoring="accuracy", n_jobs=-1)
 
